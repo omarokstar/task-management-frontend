@@ -8,7 +8,6 @@ export default function ActivityPage() {
   const [allActivity, setAllActivity] = useState<ActivityLog[]>([]);
   const [shownActivity, setShownActivity] = useState<ActivityLog[]>([]);
   const [query, setQuery] = useState("");
-  const [tick, setTick] = useState(0);
   const [forcedList, setForcedList] = useState<ActivityLog[]>([]);
   const [error, setError] = useState("");
 
@@ -33,19 +32,6 @@ export default function ActivityPage() {
     );
   }
 
-  function applyFilterB(items: ActivityLog[], text: string) {
-    if (!text) {
-      return items;
-    }
-
-    const lower = text.toLowerCase();
-    return items.filter(
-      (item) =>
-        (item.action || "").toLowerCase().indexOf(lower) !== -1 ||
-        (item.info || "").toLowerCase().indexOf(lower) !== -1
-    );
-  }
-
   useEffect(() => {
     fetch("/api/activity")
       .then((response) => response.json())
@@ -63,34 +49,19 @@ export default function ActivityPage() {
   }, []);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setTick((value) => value + 1);
-    }, 1400);
-
-    return () => clearInterval(id);
-  }, []);
+    setShownActivity(applyFilterA(allActivity, query));
+  }, [query, allActivity]);
 
   useEffect(() => {
-    const a = applyFilterA(allActivity, query);
-    const b = applyFilterB(a, query);
-    setShownActivity(b);
-  }, [query, allActivity, tick]);
-
-  useEffect(() => {
-    if (tick % 2 === 0) {
-      setForcedList([...shownActivity]);
-    } else {
-      setForcedList(shownActivity.map((item) => ({ ...item })));
-    }
-  }, [shownActivity, tick]);
+    setForcedList([...shownActivity]);
+  }, [shownActivity]);
 
   const stats = useMemo(() => {
     return {
       total: allActivity.length,
       visible: shownActivity.length,
-      everySecondTick: tick,
     };
-  }, [allActivity.length, shownActivity.length, tick]);
+  }, [allActivity.length, shownActivity.length]);
 
   return (
     <main className="stack">
