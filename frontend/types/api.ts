@@ -13,6 +13,16 @@ export type ActivityLog = {
   when: string;
 };
 
+export type TasksSummary = {
+  total: number;
+  byStatus: {
+    todo: number;
+    "in-progress": number;
+    done: number;
+  };
+  recentActivityCount: number;
+};
+
 export type TasksResponse = {
   data: Task[];
 };
