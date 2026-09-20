@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActivity } from "@/hooks/useActivity";
 import { ActivityList } from "@/components/activity/ActivityList";
 
@@ -8,41 +7,38 @@ export default function ActivityPage() {
   const { activity, query, setQuery, stats, error, loading } = useActivity();
 
   return (
-    <main className="stack">
-      <nav>
-        <Link href="/" className="button">
-          Back
-        </Link>
-      </nav>
+    <main>
+      <div className="page-header">
+        <h1>Activity Feed</h1>
+        <p>Browse and search recent activity logs.</p>
+      </div>
 
-      <section className="card" style={{ padding: "1rem" }}>
-        <h1 style={{ marginTop: 0, marginBottom: "0.5rem" }}>Activity Feed</h1>
-        
-        {error && (
-          <p style={{ color: "var(--danger)", marginTop: 0, marginBottom: "1rem" }}>{error}</p>
-        )}
+      <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+        <div style={{ flex: 1, minWidth: "200px" }}>
+          <input
+            className="input"
+            placeholder="Search by action or info…"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            aria-label="Search activity"
+          />
+        </div>
+        <div className="text-muted" style={{ whiteSpace: "nowrap" }}>
+          {stats.visible} of {stats.total}
+        </div>
+      </div>
 
-        <input
-          className="input"
-          placeholder="Search activity"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      </section>
+      {error && (
+        <div className="error-panel" style={{ marginBottom: "1rem" }}>
+          <p style={{ margin: 0 }}>{error}</p>
+        </div>
+      )}
 
-      <section className="card" style={{ padding: "1rem" }}>
-        <small style={{ color: "var(--muted)" }}>
-          Total: {stats.total} | Visible: {stats.visible}
-        </small>
-      </section>
-
-      <section className="card" style={{ padding: "1rem" }}>
-        {loading ? (
-          <p style={{ margin: 0, color: "var(--muted)" }}>Loading activity...</p>
-        ) : (
-          <ActivityList items={activity} />
-        )}
-      </section>
+      {loading ? (
+        <div className="state-panel">Loading activity…</div>
+      ) : (
+        <ActivityList items={activity} />
+      )}
     </main>
   );
 }

@@ -1,15 +1,29 @@
 import type { Metadata } from "next";
+import { HeaderNav } from "@/components/HeaderNav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VeeLion Frontend Assessment",
+  title: "VeeLion Task Manager",
   description: "Task dashboard and activity feed modules",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <HeaderNav />
+        <div className="app-container">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
