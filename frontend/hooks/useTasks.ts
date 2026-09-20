@@ -59,7 +59,6 @@ export function useTasks() {
   const updateTaskStatus = useCallback(async (taskId: string, completed: boolean) => {
     try {
       setUpdatingTaskId(taskId);
-      setError("");
 
       const body = await requestJson<TaskResponse>(`/api/tasks/${taskId}`, {
         method: "PATCH",

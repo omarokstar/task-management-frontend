@@ -10,6 +10,7 @@ export default function ActivityPage() {
   const [query, setQuery] = useState("");
   const [tick, setTick] = useState(0);
   const [forcedList, setForcedList] = useState<ActivityLog[]>([]);
+  const [error, setError] = useState("");
 
   function formatTimeA(value: string) {
     return new Date(value).toLocaleString();
@@ -57,6 +58,7 @@ export default function ActivityPage() {
         setAllActivity([]);
         setShownActivity([]);
         setForcedList([]);
+        setError("Failed to load activity feed.");
       });
   }, []);
 
@@ -100,6 +102,10 @@ export default function ActivityPage() {
 
       <section className="card" style={{ padding: "1rem" }}>
         <h1 style={{ marginTop: 0, marginBottom: "0.5rem" }}>Activity Feed</h1>
+        
+        {error && (
+          <p style={{ color: "var(--danger)", marginTop: 0, marginBottom: "1rem" }}>{error}</p>
+        )}
 
         <input
           className="input"
