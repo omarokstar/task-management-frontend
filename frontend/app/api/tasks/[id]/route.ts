@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { updateTaskInBackend } from "@/lib/backendApi";
 
 type RouteParams = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function PATCH(request: Request, { params }: RouteParams) {
   try {
+    const { id } = await params;
     const payload = (await request.json()) as { completed?: boolean };
 
     if (typeof payload.completed !== "boolean") {
@@ -18,7 +19,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       );
     }
 
-    const task = await updateTaskInBackend(params.id, payload.completed);
+    const task = await updateTaskInBackend(id, payload.completed);
     return NextResponse.json({ data: task }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
